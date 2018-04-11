@@ -1,0 +1,34 @@
+var _user$project$Model$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {playerOneName: a, playerTwoName: b, rounds: c, state: d, roundTotal: e, boxTotal: f, total: g};
+	});
+var _user$project$Model$Score = F2(
+	function (a, b) {
+		return {player: a, score: b};
+	});
+var _user$project$Model$Round = F5(
+	function (a, b, c, d, e) {
+		return {dealer: a, knocker: b, winner: c, deadwood: d, score: e};
+	});
+var _user$project$Model$Completed = {ctor: 'Completed'};
+var _user$project$Model$InProgress = {ctor: 'InProgress'};
+var _user$project$Model$PlayerTwo = {ctor: 'PlayerTwo'};
+var _user$project$Model$PlayerOne = {ctor: 'PlayerOne'};
+var _user$project$Model$twoPlayerScoreInit = {
+	ctor: '::',
+	_0: A2(_user$project$Model$Score, _user$project$Model$PlayerOne, 0),
+	_1: {
+		ctor: '::',
+		_0: A2(_user$project$Model$Score, _user$project$Model$PlayerTwo, 0),
+		_1: {ctor: '[]'}
+	}
+};
+var _user$project$Model$init = A7(
+	_user$project$Model$Model,
+	'',
+	'',
+	{ctor: '[]'},
+	_user$project$Model$InProgress,
+	_user$project$Model$twoPlayerScoreInit,
+	_user$project$Model$twoPlayerScoreInit,
+	_user$project$Model$twoPlayerScoreInit);

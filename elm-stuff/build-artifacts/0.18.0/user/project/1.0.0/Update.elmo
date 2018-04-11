@@ -1,0 +1,7 @@
+var _user$project$Update$update = F2(
+	function (msg, model) {
+		return model;
+	});
+var _user$project$Update$SetCurrentText = function (a) {
+	return {ctor: 'SetCurrentText', _0: a};
+};
