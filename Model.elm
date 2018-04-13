@@ -47,11 +47,11 @@ type alias Round =
 
 init : Model
 init =
-    Model
-      ""
-      ""
-      [ ]
-      InProgress
-      twoPlayerScoreInit
-      twoPlayerScoreInit
-      twoPlayerScoreInit
+  Model
+    ""
+    ""
+    [ ]
+    InProgress
+    twoPlayerScoreInit
+    twoPlayerScoreInit
+    twoPlayerScoreInit
