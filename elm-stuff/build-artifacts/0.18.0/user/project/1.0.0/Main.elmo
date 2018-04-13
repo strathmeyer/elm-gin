@@ -1,2 +1,0 @@
-var _user$project$Main$main = _elm_lang$html$Html$beginnerProgram(
-	{model: _user$project$Model$init, view: _user$project$View$view, update: _user$project$Update$update})();
