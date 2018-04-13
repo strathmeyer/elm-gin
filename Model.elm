@@ -33,28 +33,24 @@ twoPlayerScoreInit =
     Score PlayerTwo 0
   ]
 
+--playerOneScore : [ Score ] -> Int
+--playerOneScore =
+
+
 type alias Round =
   { dealer : Player
-  , knocker : Player
-  , winner : Player -- not nec the knocker if undercut
+  , knocker : Maybe Player
+  , winner : Maybe Player -- not nec the knocker if undercut
   , deadwood : List Score
   , score : List Score
   }
-
---Round:
---  dealer Player
---  knocker Player
---  deadwood [PlayerScore]
---  game [PlayerScore]
-
-
 
 init : Model
 init =
     Model
       ""
       ""
-      []
+      [ ]
       InProgress
       twoPlayerScoreInit
       twoPlayerScoreInit

@@ -4,7 +4,7 @@ import Model
 
 
 type Msg
-    = SetCurrentText String
+    = Knock Model.Player
 
 
 update : Msg -> Model.Model -> Model.Model
