@@ -1,6 +1,6 @@
 module Update exposing (..)
 
-import Model exposing (Model, Player, Round)
+import Model exposing (Model, Player(..), Round, Score, playerScore)
 
 
 type Msg
@@ -11,6 +11,27 @@ type Msg
 addKnocker : Player -> Round -> Round
 addKnocker player round =
   { round | knocker = Just player }
+
+
+updateScore : Player -> Int -> Round -> Round
+updateScore player score round =
+  let
+    playerOneScore =
+      playerScore PlayerOne round.score
+
+    playerTwoScore =
+      playerScore PlayerTwo round.score
+  in
+    { round | score = case player of
+      PlayerOne ->
+        [ Score PlayerOne score
+        , Score PlayerTwo playerTwoScore
+        ]
+      PlayerTwo ->
+        [ Score PlayerOne playerOneScore
+        , Score PlayerTwo score
+        ]
+    }
 
 
 update : Msg -> Model -> Model
@@ -27,4 +48,8 @@ update msg model =
           Knock player ->
             { model | rounds = (addKnocker player r) :: tail }
           RoundScore player string ->
-            model
+            case String.toInt string of
+              Err e ->
+                model
+              Ok score ->
+                { model | rounds = (updateScore player score r) :: tail }
