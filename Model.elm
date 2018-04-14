@@ -33,9 +33,12 @@ twoPlayerScoreInit =
     Score PlayerTwo 0
   ]
 
---playerOneScore : [ Score ] -> Int
---playerOneScore =
-
+playerScore : Player -> List Score -> Int
+playerScore player scoreList =
+  List.filter (\n -> n.player == player) scoreList
+    |> List.head
+    |> Maybe.withDefault (Score player 0)
+    |> .score
 
 type alias Round =
   { dealer : Player
