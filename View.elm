@@ -1,6 +1,6 @@
 module View exposing (..)
 
-import Html exposing (button, div, h1, text)
+import Html exposing (button, div, h1, h3, text)
 import Html.Events exposing (onClick)
 import Update
 
@@ -24,7 +24,7 @@ scoreDisplay title scoreList =
   in
     div
       []
-      [ h1 [] [ text title ]
+      [ h3 [] [ text title ]
       , div
         []
         [ text ("Player One: " ++ playerOneScore) ]
@@ -46,11 +46,21 @@ knockButtons =
     ]
 
 
+roundDisplay : Round -> Html.Html Update.Msg
+roundDisplay round =
+  div
+    []
+    [ scoreDisplay "Score" round.score
+    , knockButtons
+    , Html.hr [] []
+    ]
+
+
 view : Model -> Html.Html Update.Msg
 view model =
   div
     []
     [ h1 [] [ text "Gin Score" ]
-    , knockButtons
+    , div [] (List.map roundDisplay model.rounds)
     , scoreDisplay "Sum of Rounds" model.roundTotal
     ]
