@@ -1,9 +1,17 @@
 module View exposing (..)
 
-import Update
-import Model exposing (Model, Player(..), Score, playerScore)
 import Html exposing (button, div, h1, text)
 import Html.Events exposing (onClick)
+import Update
+
+import Model
+  exposing
+    ( Model
+    , Player(..)
+    , Round
+    , Score
+    , playerScore
+    )
 
 
 scoreDisplay : String -> List Score -> Html.Html Update.Msg

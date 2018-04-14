@@ -1,4 +1,12 @@
-module Model exposing (Model, Player(..), Score, init, playerScore)
+module Model
+  exposing
+    ( Model
+    , Player(..)
+    , Round
+    , Score
+    , init
+    , playerScore
+    )
 
 --Game State:
 --  name - player1 (first dealer)
