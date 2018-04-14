@@ -5,6 +5,7 @@ import Model exposing (Model, Player, Round)
 
 type Msg
     = Knock Player
+    | RoundScore Player String
 
 
 addKnocker : Player -> Round -> Round
@@ -25,3 +26,5 @@ update msg model =
         case msg of
           Knock player ->
             { model | rounds = (addKnocker player r) :: tail }
+          RoundScore player string ->
+            model

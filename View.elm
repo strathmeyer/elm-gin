@@ -1,7 +1,8 @@
 module View exposing (..)
 
-import Html exposing (button, div, h1, h3, text)
-import Html.Events exposing (onClick)
+import Html exposing (button, div, h1, h3, input, text)
+import Html.Attributes exposing (placeholder, type_)
+import Html.Events exposing (onClick, onInput)
 import Update
 
 import Model
@@ -64,12 +65,38 @@ hasPlayer player =
       True
 
 
+scoreInput : Html.Html Update.Msg
+scoreInput =
+  div
+    []
+    [ Html.label
+      []
+      [ text "Player One:"
+      , input
+          [ placeholder "Player One"
+          , type_ "number"
+          , onInput (Update.RoundScore Model.PlayerOne)
+          ]
+          []
+      ]
+    , Html.label
+      []
+      [ text "Player Two:"
+      , input
+          [ placeholder "Player Two"
+          , type_ "number"
+          , onInput (Update.RoundScore Model.PlayerTwo)
+          ]
+          []
+      ]
+    ]
+
 roundStateUI : Round -> Html.Html Update.Msg
 roundStateUI round =
   if not (hasPlayer round.knocker) then
     knockButtons
   else if not (hasPlayer round.winner) then
-    div [] [ text "text inputs for knocker stuff"]
+    scoreInput
   else
     scoreDisplay "Score" round.score
 
