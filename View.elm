@@ -55,13 +55,31 @@ playerString player =
       "Player Two"
 
 
+hasPlayer : Maybe Player -> Bool
+hasPlayer player =
+  case player of
+    Nothing ->
+      False
+    Just _ ->
+      True
+
+
+roundStateUI : Round -> Html.Html Update.Msg
+roundStateUI round =
+  if not (hasPlayer round.knocker) then
+    knockButtons
+  else if not (hasPlayer round.winner) then
+    div [] [ text "text inputs for knocker stuff"]
+  else
+    scoreDisplay "Score" round.score
+
+
 roundDisplay : Round -> Html.Html Update.Msg
 roundDisplay round =
   div
     []
     [ text ("Dealer: " ++ playerString round.dealer)
-    , scoreDisplay "Score" round.score
-    , knockButtons
+    , roundStateUI round
     , Html.hr [] []
     ]
 
