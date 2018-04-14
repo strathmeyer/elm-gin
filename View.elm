@@ -46,11 +46,21 @@ knockButtons =
     ]
 
 
+playerString : Player -> String
+playerString player =
+  case player of
+    PlayerOne ->
+      "Player One"
+    PlayerTwo ->
+      "Player Two"
+
+
 roundDisplay : Round -> Html.Html Update.Msg
 roundDisplay round =
   div
     []
-    [ scoreDisplay "Score" round.score
+    [ text ("Dealer: " ++ playerString round.dealer)
+    , scoreDisplay "Score" round.score
     , knockButtons
     , Html.hr [] []
     ]
