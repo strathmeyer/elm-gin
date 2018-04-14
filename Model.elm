@@ -10,6 +10,7 @@ module Model exposing (Model, Player(..), Score, init, playerScore)
 --  total Score
 type GameState = InProgress | Completed
 
+
 type alias Model =
     { playerOneName : String
     , playerTwoName : String
@@ -20,12 +21,15 @@ type alias Model =
     , total : List Score
     }
 
+
 type Player = PlayerOne | PlayerTwo
+
 
 type alias Score =
   { player : Player
   , score : Int
   }
+
 
 twoPlayerScoreInit =
   [
@@ -33,9 +37,11 @@ twoPlayerScoreInit =
     Score PlayerTwo 0
   ]
 
+
 findScore : Player -> List Score -> Maybe Score
 findScore player scoreList =
   List.head (List.filter (\n -> n.player == player) scoreList)
+
 
 playerScore : Player -> List Score -> Int
 playerScore player scoreList =
