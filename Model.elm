@@ -68,12 +68,23 @@ type alias Round =
   , score : List Score
   }
 
+
+roundInit : Player -> Round
+roundInit dealer =
+  Round
+    dealer
+    Nothing
+    Nothing
+    twoPlayerScoreInit
+    twoPlayerScoreInit
+
+
 init : Model
 init =
   Model
     ""
     ""
-    [ ]
+    [ roundInit PlayerOne ]
     InProgress
     twoPlayerScoreInit
     twoPlayerScoreInit
