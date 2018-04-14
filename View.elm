@@ -1,45 +1,48 @@
 module View exposing (..)
 
 import Update
-import Model
-import Html
-import Html.Events
-import Html.Attributes
+import Model exposing (Model, Player(..), Score, playerScore)
+import Html exposing (button, div, h1, text)
+import Html.Events exposing (onClick)
 
 
-scoreDisplay : String -> List Model.Score -> Html.Html Update.Msg
+scoreDisplay : String -> List Score -> Html.Html Update.Msg
 scoreDisplay title scoreList =
   let
     playerOneScore =
-      toString (Model.playerScore Model.PlayerOne scoreList)
+      toString (playerScore PlayerOne scoreList)
     playerTwoScore =
-      toString (Model.playerScore Model.PlayerTwo scoreList)
+      toString (playerScore PlayerTwo scoreList)
   in
-    Html.div
+    div
       []
-      [ Html.h1 [] [ Html.text title ]
-      , Html.div
+      [ h1 [] [ text title ]
+      , div
         []
-        [ Html.text ("Player One: " ++ playerOneScore) ]
-      , Html.div
+        [ text ("Player One: " ++ playerOneScore) ]
+      , div
         []
-        [ Html.text ("Player Two: " ++ playerTwoScore) ]
+        [ text ("Player Two: " ++ playerTwoScore) ]
       ]
 
-
-view : Model.Model -> Html.Html Update.Msg
-view model =
-  Html.div
+knockButtons : Html.Html Update.Msg
+knockButtons =
+  div
     []
-    [ Html.h1 [] [ Html.text "Gin Score" ]
-    , Html.div
-      []
-      [ Html.button
-        [ Html.Events.onClick (Update.Knock Model.PlayerOne) ]
-        [ Html.text "Player One Knocks" ]
-      , Html.button
-        [ Html.Events.onClick (Update.Knock Model.PlayerTwo) ]
-        [ Html.text "Player Two Knocks" ]
-      ]
+    [ button
+      [ onClick (Update.Knock PlayerOne) ]
+      [ text "Player One Knocks" ]
+    , button
+      [ onClick (Update.Knock PlayerTwo) ]
+      [ text "Player Two Knocks" ]
+    ]
+
+
+view : Model -> Html.Html Update.Msg
+view model =
+  div
+    []
+    [ h1 [] [ text "Gin Score" ]
+    , knockButtons
     , scoreDisplay "Sum of Rounds" model.roundTotal
     ]
