@@ -28,18 +28,15 @@ scoreDisplay title score =
   in
     div
       []
-      [ h3 [] [ text title ]
-      , div
-        []
-        [ text
-            (playerString PlayerOne
+      [ Html.strong [] [ text title ]
+      , text (" - "
+            ++ playerString PlayerOne
             ++ ": "
             ++ playerOneScore
             ++ ", "
             ++ playerString PlayerTwo
             ++ ": "
             ++ playerTwoScore)
-        ]
       ]
 
 
