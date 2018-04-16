@@ -89,6 +89,10 @@ scoreInput =
           ]
           []
       ]
+    , input
+        [ type_ "submit"
+        , onClick Update.SubmitRound ]
+        []
     ]
 
 roundStateUI : Round -> Html.Html Update.Msg

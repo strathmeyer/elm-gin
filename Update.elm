@@ -53,3 +53,5 @@ update msg model =
                 model
               Ok score ->
                 { model | rounds = (updateScore player score r) :: tail }
+          SubmitRound ->
+            model
