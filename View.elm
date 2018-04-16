@@ -100,6 +100,8 @@ deadwoodInput =
         [ placeholder (playerString PlayerOne)
         , class "form-control"
         , type_ "number"
+        , Html.Attributes.min "0"
+        , Html.Attributes.max "100"
         , onInput (Update.Deadwood Model.PlayerOne)
         ]
         []
@@ -110,6 +112,8 @@ deadwoodInput =
         [ placeholder (playerString PlayerTwo)
         , class "form-control"
         , type_ "number"
+        , Html.Attributes.min "0"
+        , Html.Attributes.max "100"
         , onInput (Update.Deadwood Model.PlayerTwo)
         ]
         []
