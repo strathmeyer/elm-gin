@@ -130,6 +130,20 @@ roundDisplay index round =
     , Html.hr [] []
     ]
 
+gameScore : Model -> List (Html.Html Update.Msg)
+gameScore model =
+  let
+    basicDisplay = [ scoreDisplay "Sum of Rounds" model.roundTotal ]
+  in
+    case model.state of
+      InProgress ->
+        basicDisplay
+      Completed ->
+        basicDisplay ++
+          [ scoreDisplay "Box Score" model.boxTotal
+          , scoreDisplay "Total score" model.total
+          ]
+
 
 view : Model -> Html.Html Update.Msg
 view model =
@@ -142,7 +156,6 @@ view model =
   in
     div
       []
-      [ h1 [] [ text "Gin Score" ]
+      ([ h1 [] [ text "Gin Score" ]
       , div [] (List.indexedMap roundDisplay (List.reverse rounds))
-      , scoreDisplay "Sum of Rounds" model.roundTotal
-      ]
+      ] ++ gameScore model)

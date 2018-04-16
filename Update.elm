@@ -194,7 +194,6 @@ update msg model =
                 = sumScores (List.map .score rounds)
 
             in
-              -- check on whether the game is over
               checkForGameEnd { model
                 | rounds = rounds
                 , roundTotal = roundTotal
