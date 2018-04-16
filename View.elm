@@ -1,7 +1,7 @@
 module View exposing (..)
 
 import Html exposing (button, div, h1, h3, input, p, text)
-import Html.Attributes exposing (placeholder, type_)
+import Html.Attributes exposing (class, placeholder, type_)
 import Html.Events exposing (onClick, onInput)
 import Update
 
@@ -27,29 +27,45 @@ scoreDisplay title score =
 
   in
     div
-      []
-      [ Html.strong [] [ text title ]
-      , text (" - "
-            ++ playerString PlayerOne
-            ++ ": "
-            ++ playerOneScore
-            ++ ", "
-            ++ playerString PlayerTwo
-            ++ ": "
-            ++ playerTwoScore)
+      [ class "row" ]
+      [ div
+        [ class "col text-truncate" ]
+        [ Html.strong [] [ text title ] ]
+      , div
+        [ class "col" ]
+        [ text (playerString PlayerOne
+          ++ ": "
+          ++ playerOneScore) ]
+      , div
+        [ class "col" ]
+        [ text (playerString PlayerTwo
+          ++ ": "
+          ++ playerTwoScore) ]
       ]
 
 
 knockButtons : Html.Html Update.Msg
 knockButtons =
   div
-    []
-    [ button
-      [ onClick (Update.Knock PlayerOne) ]
-      [ text (playerString PlayerOne ++ " Knocks") ]
-    , button
-      [ onClick (Update.Knock PlayerTwo) ]
-      [ text (playerString PlayerTwo ++ " Knocks") ]
+    [ class "row" ]
+    [ div
+      [ class "col" ]
+      [ button
+        [ onClick (Update.Knock PlayerOne)
+        , class "btn btn-primary btn-block"
+        , type_ "button"
+        ]
+        [ text (playerString PlayerOne ++ " Knocks") ]
+      ]
+    , div
+      [ class "col" ]
+      [ button
+        [ onClick (Update.Knock PlayerTwo)
+        , class "btn btn-primary btn-block"
+        , type_ "button"
+        ]
+        [ text (playerString PlayerTwo ++ " Knocks") ]
+      ]
     ]
 
 
@@ -70,35 +86,43 @@ hasPlayer player =
     Just _ ->
       True
 
+--<label for="exampleInputEmail1">Email address</label>
+--    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+
 
 deadwoodInput : Html.Html Update.Msg
 deadwoodInput =
   div
-    []
-    [ Html.label
-      []
-      [ text (playerString PlayerOne ++ ":" )
-      , input
-          [ placeholder "Score"
-          , type_ "number"
-          , onInput (Update.Deadwood Model.PlayerOne)
-          ]
-          []
-      ]
-    , Html.label
-      []
-      [ text (playerString PlayerTwo ++ ":" )
-      , input
-          [ placeholder "Score"
-          , type_ "number"
-          , onInput (Update.Deadwood Model.PlayerTwo)
-          ]
-          []
-      ]
-    , input
-        [ type_ "submit"
-        , onClick Update.SubmitRound ]
+    [ class "row" ]
+    [ div
+      [ class "col" ]
+      [ input
+        [ placeholder (playerString PlayerOne)
+        , class "form-control"
+        , type_ "number"
+        , onInput (Update.Deadwood Model.PlayerOne)
+        ]
         []
+      ]
+    , div
+      [ class "col" ]
+      [ input
+        [ placeholder (playerString PlayerTwo)
+        , class "form-control"
+        , type_ "number"
+        , onInput (Update.Deadwood Model.PlayerTwo)
+        ]
+        []
+      ]
+    , div
+      [ class "col" ]
+      [ button
+        [ type_ "button"
+        , class "btn btn-block btn-primary"
+        , onClick Update.SubmitRound
+        ]
+        [ text "Submit" ]
+      ]
     ]
 
 
@@ -110,26 +134,32 @@ roundStateUI round =
     deadwoodInput
   else
     div
-      []
-      [ scoreDisplay "Deadwood" round.deadwood
-      , scoreDisplay "Score" round.score
+      [ class "row" ]
+      [ div
+        [ class "col" ]
+        [ scoreDisplay "Deadwood" round.deadwood
+        , scoreDisplay "Score" round.score
+        ]
       ]
 
 
 roundDisplay : Int -> Round -> Html.Html Update.Msg
 roundDisplay index round =
   div
-    []
-    [ p
-        []
-        [ text ("Round " ++
-            toString (index + 1) ++
-            " - " ++
-            "Dealer: " ++
-            playerString round.dealer)
+    [ class "row pb-4 mb-4 border-bottom" ]
+    [ div
+      [ class "col" ]
+      [ div
+        [ class "row" ]
+        [ p
+          [ class "col" ]
+          [ text ("Round " ++ toString (index + 1))]
+        , p
+          [ class "col" ]
+          [ text ("Dealer: " ++ playerString round.dealer)]
         ]
-    , roundStateUI round
-    , Html.hr [] []
+      , roundStateUI round
+      ]
     ]
 
 gameScore : Model -> List (Html.Html Update.Msg)
@@ -157,7 +187,12 @@ view model =
         Maybe.withDefault [] (List.tail model.rounds)
   in
     div
-      []
-      ([ h1 [] [ text "Gin Score" ]
-      , div [] (List.indexedMap roundDisplay (List.reverse rounds))
-      ] ++ gameScore model)
+      [ class "container" ]
+      ([ div
+        [ class "row" ]
+        [ div
+          [ class "col" ]
+          [ h1 [] [ text "Gin Score" ] ]
+        ]
+      ] ++ (List.indexedMap roundDisplay (List.reverse rounds))
+        ++ (gameScore model))
