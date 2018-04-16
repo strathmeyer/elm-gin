@@ -123,6 +123,30 @@ boxScore rounds =
     , SingleScore PlayerTwo ((winCount PlayerTwo rounds) * 20)
     ]
 
+winnerBonus : Score -> Score
+winnerBonus roundTotal =
+  let
+    playerOneScore =
+      playerScore PlayerOne roundTotal
+
+    playerTwoScore =
+      playerScore PlayerTwo roundTotal
+
+    winner = if playerOneScore > playerTwoScore then
+      PlayerOne
+    else
+      PlayerTwo
+
+    loser =
+      case winner of
+        PlayerOne -> PlayerTwo
+        PlayerTwo -> PlayerOne
+
+  in
+    [ SingleScore winner 100
+    , SingleScore loser 0
+    ]
+
 
 checkForGameEnd : Model -> Model
 checkForGameEnd model =
@@ -134,15 +158,17 @@ checkForGameEnd model =
   in
     if maxScore < 100 then
       model
-
     else
       let
         boxTotal =
           boxScore model.rounds
 
-        -- 100 bonus points for the winner
         total =
-          sumScores [boxTotal, model.roundTotal]
+          sumScores
+            [ boxTotal
+            , model.roundTotal
+            , winnerBonus model.roundTotal
+            ]
 
       in
         { model
@@ -161,10 +187,12 @@ update msg model =
     case round of
       Nothing ->
         model
+
       Just r ->
         case msg of
           Knock player ->
             { model | rounds = (addKnocker player r) :: tail }
+
           Deadwood player string ->
             case String.toInt string of
               Err e ->
@@ -179,6 +207,7 @@ update msg model =
 
                 in
                   { model | rounds = updatedRound :: tail }
+
           SubmitRound ->
             let
               updatedRound =
