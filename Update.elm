@@ -7,6 +7,7 @@ import Model
   , Player(..)
   , Round
   , Score
+  , SingleScore
   , playerScore
   , roundInit
   , sumScores
@@ -24,7 +25,7 @@ addKnocker player round =
   { round | knocker = Just player }
 
 
-updateScore : Player -> Int -> List Score -> List Score
+updateScore : Player -> Int -> Score -> Score
 updateScore player newScore scoreList =
   let
     playerOneScore =
@@ -35,12 +36,12 @@ updateScore player newScore scoreList =
   in
     case player of
       PlayerOne ->
-        [ Score PlayerOne newScore
-        , Score PlayerTwo playerTwoScore
+        [ SingleScore PlayerOne newScore
+        , SingleScore PlayerTwo playerTwoScore
         ]
       PlayerTwo ->
-        [ Score PlayerOne playerOneScore
-        , Score PlayerTwo newScore
+        [ SingleScore PlayerOne playerOneScore
+        , SingleScore PlayerTwo newScore
         ]
 
 
@@ -85,8 +86,8 @@ addWinner round knocker =
     { round |
         winner = Just winner,
         score =
-          [ Score winner winnerScore
-          , Score loser 0
+          [ SingleScore winner winnerScore
+          , SingleScore loser 0
           ]
     }
 
@@ -101,7 +102,7 @@ handleSubmit round =
         round
         knocker
 
-boxScore : List Round -> List Score
+boxScore : List Round -> Score
 boxScore rounds =
   let
     roundWonByPlayer : Player -> Round -> Bool
@@ -118,8 +119,8 @@ boxScore rounds =
       List.length (List.filter (roundWonByPlayer player) rounds)
 
   in
-    [ Score PlayerOne ((winCount PlayerOne rounds) * 20)
-    , Score PlayerTwo ((winCount PlayerTwo rounds) * 20)
+    [ SingleScore PlayerOne ((winCount PlayerOne rounds) * 20)
+    , SingleScore PlayerTwo ((winCount PlayerTwo rounds) * 20)
     ]
 
 

@@ -5,70 +5,62 @@ module Model
     , Player(..)
     , Round
     , Score
+    , SingleScore
     , init
     , playerScore
     , roundInit
     , sumScores
     )
 
---Game State:
---  name - player1 (first dealer)
---  name - player2
---  list of  [Rounds]
---  state (in progress, completed)
---  roundsTotal Score
---  boxTotal Score
---  total Score
 type GameState = InProgress | Completed
 
-
+-- TODO: use player names
 type alias Model =
     { playerOneName : String
     , playerTwoName : String
     , rounds : List Round
     , state : GameState
-    , roundTotal : List Score
-    , boxTotal : List Score
-    , total : List Score
+    , roundTotal : Score
+    , boxTotal : Score
+    , total : Score
     }
 
--- TODO: rename Score to something like SingleScore
--- so we can then alias Score to List SingleScore and
--- stop using List Score so much.
-sumScores : List (List Score) -> List Score
+
+sumScores : List Score -> Score
 sumScores scores =
   let
     playerTotal player =
       List.sum (List.map (playerScore player) scores)
 
   in
-    [ Score PlayerOne (playerTotal PlayerOne)
-    , Score PlayerTwo (playerTotal PlayerTwo)
+    [ SingleScore PlayerOne (playerTotal PlayerOne)
+    , SingleScore PlayerTwo (playerTotal PlayerTwo)
     ]
 
 
 type Player = PlayerOne | PlayerTwo
 
 
-type alias Score =
+type alias SingleScore =
   { player : Player
   , score : Int
   }
 
+type alias Score = List SingleScore
 
 twoPlayerScoreInit =
   [
-    Score PlayerOne 0,
-    Score PlayerTwo 0
+    SingleScore PlayerOne 0,
+    SingleScore PlayerTwo 0
   ]
 
 
-findScore : Player -> List Score -> Maybe Score
+findScore : Player -> Score -> Maybe SingleScore
 findScore player scoreList =
   List.head (List.filter (\n -> n.player == player) scoreList)
 
 
-playerScore : Player -> List Score -> Int
+playerScore : Player -> Score -> Int
 playerScore player scoreList =
   case findScore player scoreList of
     Nothing ->
@@ -81,8 +73,8 @@ type alias Round =
   { dealer : Player
   , knocker : Maybe Player
   , winner : Maybe Player -- not nec the knocker if undercut
-  , deadwood : List Score
-  , score : List Score
+  , deadwood : Score
+  , score : Score
   }
 
 

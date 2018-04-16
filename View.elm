@@ -16,14 +16,14 @@ import Model
     )
 
 
-scoreDisplay : String -> List Score -> Html.Html Update.Msg
-scoreDisplay title scoreList =
+scoreDisplay : String -> Score -> Html.Html Update.Msg
+scoreDisplay title score =
   let
     playerOneScore =
-      toString (playerScore PlayerOne scoreList)
+      toString (playerScore PlayerOne score)
 
     playerTwoScore =
-      toString (playerScore PlayerTwo scoreList)
+      toString (playerScore PlayerTwo score)
 
   in
     div
