@@ -26,13 +26,13 @@ addKnocker player round =
 
 
 updateScore : Player -> Int -> Score -> Score
-updateScore player newScore scoreList =
+updateScore player newScore score =
   let
     playerOneScore =
-      playerScore PlayerOne scoreList
+      playerScore PlayerOne score
 
     playerTwoScore =
-      playerScore PlayerTwo scoreList
+      playerScore PlayerTwo score
   in
     case player of
       PlayerOne ->

@@ -46,7 +46,9 @@ type alias SingleScore =
   , score : Int
   }
 
+
 type alias Score = List SingleScore
+
 
 twoPlayerScoreInit =
   [
@@ -56,13 +58,13 @@ twoPlayerScoreInit =
 
 
 findScore : Player -> Score -> Maybe SingleScore
-findScore player scoreList =
-  List.head (List.filter (\n -> n.player == player) scoreList)
+findScore player score =
+  List.head (List.filter (\n -> n.player == player) score)
 
 
 playerScore : Player -> Score -> Int
-playerScore player scoreList =
-  case findScore player scoreList of
+playerScore player score =
+  case findScore player score of
     Nothing ->
       0
     Just score ->
