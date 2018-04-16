@@ -2,7 +2,8 @@ module Update exposing (..)
 
 import Model
   exposing
-  ( Model
+  ( GameState(..)
+  , Model
   , Player(..)
   , Round
   , Score
@@ -100,6 +101,54 @@ handleSubmit round =
         round
         knocker
 
+boxScore : List Round -> List Score
+boxScore rounds =
+  let
+    roundWonByPlayer : Player -> Round -> Bool
+    roundWonByPlayer player round =
+      case round.winner of
+        Nothing ->
+          False
+
+        Just winner ->
+          winner == player
+
+    winCount : Player -> List Round -> Int
+    winCount player rounds =
+      List.length (List.filter (roundWonByPlayer player) rounds)
+
+  in
+    [ Score PlayerOne ((winCount PlayerOne rounds) * 20)
+    , Score PlayerTwo ((winCount PlayerTwo rounds) * 20)
+    ]
+
+
+checkForGameEnd : Model -> Model
+checkForGameEnd model =
+  let
+    maxScore =
+      Maybe.withDefault
+        0
+        (List.maximum (List.map .score model.roundTotal))
+  in
+    if maxScore < 100 then
+      model
+
+    else
+      let
+        boxTotal =
+          boxScore model.rounds
+
+        total =
+          sumScores [boxTotal, model.roundTotal]
+
+      in
+        { model
+        | state = Completed
+        , boxTotal = boxTotal
+        , total = total
+        }
+
 
 update : Msg -> Model -> Model
 update msg model =
@@ -142,11 +191,11 @@ update msg model =
                 (roundInit nextDealer) :: updatedRound :: tail
 
               roundTotal
-                = sumScores rounds
+                = sumScores (List.map .score rounds)
 
             in
               -- check on whether the game is over
-              { model
+              checkForGameEnd { model
                 | rounds = rounds
                 , roundTotal = roundTotal
               }

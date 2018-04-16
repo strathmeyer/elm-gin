@@ -7,7 +7,8 @@ import Update
 
 import Model
   exposing
-    ( Model
+    ( GameState(..)
+    , Model
     , Player(..)
     , Round
     , Score
@@ -132,9 +133,16 @@ roundDisplay index round =
 
 view : Model -> Html.Html Update.Msg
 view model =
-  div
-    []
-    [ h1 [] [ text "Gin Score" ]
-    , div [] (List.indexedMap roundDisplay (List.reverse model.rounds))
-    , scoreDisplay "Sum of Rounds" model.roundTotal
-    ]
+  let
+    rounds = case model.state of
+      InProgress ->
+        model.rounds
+      Completed ->
+        Maybe.withDefault [] (List.tail model.rounds)
+  in
+    div
+      []
+      [ h1 [] [ text "Gin Score" ]
+      , div [] (List.indexedMap roundDisplay (List.reverse rounds))
+      , scoreDisplay "Sum of Rounds" model.roundTotal
+      ]

@@ -1,6 +1,7 @@
 module Model
   exposing
-    ( Model
+    ( GameState(..)
+    , Model
     , Player(..)
     , Round
     , Score
@@ -34,12 +35,9 @@ type alias Model =
 -- TODO: rename Score to something like SingleScore
 -- so we can then alias Score to List SingleScore and
 -- stop using List Score so much.
-sumScores : List Round -> List Score
-sumScores rounds =
+sumScores : List (List Score) -> List Score
+sumScores scores =
   let
-    scores =
-      List.map .score rounds
-
     playerTotal player =
       List.sum (List.map (playerScore player) scores)
 
