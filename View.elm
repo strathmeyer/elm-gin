@@ -31,10 +31,15 @@ scoreDisplay title score =
       [ h3 [] [ text title ]
       , div
         []
-        [ text ("Player One: " ++ playerOneScore) ]
-      , div
-        []
-        [ text ("Player Two: " ++ playerTwoScore) ]
+        [ text
+            (playerString PlayerOne
+            ++ ": "
+            ++ playerOneScore
+            ++ ", "
+            ++ playerString PlayerTwo
+            ++ ": "
+            ++ playerTwoScore)
+        ]
       ]
 
 
@@ -44,10 +49,10 @@ knockButtons =
     []
     [ button
       [ onClick (Update.Knock PlayerOne) ]
-      [ text "Player One Knocks" ]
+      [ text (playerString PlayerOne ++ " Knocks") ]
     , button
       [ onClick (Update.Knock PlayerTwo) ]
-      [ text "Player Two Knocks" ]
+      [ text (playerString PlayerTwo ++ " Knocks") ]
     ]
 
 
@@ -55,9 +60,9 @@ playerString : Player -> String
 playerString player =
   case player of
     PlayerOne ->
-      "Player One"
+      "One"
     PlayerTwo ->
-      "Player Two"
+      "Two"
 
 
 hasPlayer : Maybe Player -> Bool
@@ -75,9 +80,9 @@ deadwoodInput =
     []
     [ Html.label
       []
-      [ text "Player One:"
+      [ text (playerString PlayerOne ++ ":" )
       , input
-          [ placeholder "Player One"
+          [ placeholder "Score"
           , type_ "number"
           , onInput (Update.Deadwood Model.PlayerOne)
           ]
@@ -85,9 +90,9 @@ deadwoodInput =
       ]
     , Html.label
       []
-      [ text "Player Two:"
+      [ text (playerString PlayerTwo ++ ":" )
       , input
-          [ placeholder "Player Two"
+          [ placeholder "Score"
           , type_ "number"
           , onInput (Update.Deadwood Model.PlayerTwo)
           ]

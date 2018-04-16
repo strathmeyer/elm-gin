@@ -140,6 +140,7 @@ checkForGameEnd model =
         boxTotal =
           boxScore model.rounds
 
+        -- 100 bonus points for the winner
         total =
           sumScores [boxTotal, model.roundTotal]
 
