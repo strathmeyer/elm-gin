@@ -20,8 +20,10 @@ scoreDisplay title scoreList =
   let
     playerOneScore =
       toString (playerScore PlayerOne scoreList)
+
     playerTwoScore =
       toString (playerScore PlayerTwo scoreList)
+
   in
     div
       []
@@ -104,7 +106,11 @@ roundStateUI round =
   else if not (hasPlayer round.winner) then
     deadwoodInput
   else
-    scoreDisplay "Score" round.score
+    div
+      []
+      [ scoreDisplay "Deadwood" round.deadwood
+      , scoreDisplay "Score" round.score
+      ]
 
 
 roundDisplay : Int -> Round -> Html.Html Update.Msg

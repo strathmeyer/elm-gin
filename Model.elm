@@ -7,6 +7,7 @@ module Model
     , init
     , playerScore
     , roundInit
+    , sumScores
     )
 
 --Game State:
@@ -29,6 +30,23 @@ type alias Model =
     , boxTotal : List Score
     , total : List Score
     }
+
+-- TODO: rename Score to something like SingleScore
+-- so we can then alias Score to List SingleScore and
+-- stop using List Score so much.
+sumScores : List Round -> List Score
+sumScores rounds =
+  let
+    scores =
+      List.map .score rounds
+
+    playerTotal player =
+      List.sum (List.map (playerScore player) scores)
+
+  in
+    [ Score PlayerOne (playerTotal PlayerOne)
+    , Score PlayerTwo (playerTotal PlayerTwo)
+    ]
 
 
 type Player = PlayerOne | PlayerTwo

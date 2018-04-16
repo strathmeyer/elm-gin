@@ -1,6 +1,15 @@
 module Update exposing (..)
 
-import Model exposing (Model, Player(..), Round, Score, playerScore, roundInit)
+import Model
+  exposing
+  ( Model
+  , Player(..)
+  , Round
+  , Score
+  , playerScore
+  , roundInit
+  , sumScores
+  )
 
 
 type Msg
@@ -34,7 +43,7 @@ updateScore player newScore scoreList =
         ]
 
 
-addWinner :  Round -> Player -> Round
+addWinner : Round -> Player -> Round
 addWinner round knocker =
   let
     nonKnocker =
@@ -49,7 +58,7 @@ addWinner round knocker =
       playerScore nonKnocker round.deadwood
 
     winner =
-      if knockerScore > 0 && knockerScore <= poneScore then
+      if knockerScore > 0 && knockerScore >= poneScore then
         nonKnocker
       else
         knocker
@@ -61,18 +70,22 @@ addWinner round knocker =
 
     winnerScore =
       if winner == knocker then
-        0
+        if knockerScore == 0 then
+          -- gin
+          poneScore + 20
+        else
+          -- normal score
+          poneScore - knockerScore
       else
-        10
-
-    loserScore = 0
+        -- knocker was undercut
+        (knockerScore - poneScore) + 10
 
   in
     { round |
         winner = Just winner,
         score =
           [ Score winner winnerScore
-          , Score loser loserScore
+          , Score loser 0
           ]
     }
 
@@ -124,5 +137,16 @@ update msg model =
                 case r.dealer of
                   PlayerOne -> PlayerTwo
                   PlayerTwo -> PlayerOne
+
+              rounds =
+                (roundInit nextDealer) :: updatedRound :: tail
+
+              roundTotal
+                = sumScores rounds
+
             in
-              { model | rounds = (roundInit nextDealer) :: updatedRound :: tail }
+              -- check on whether the game is over
+              { model
+                | rounds = rounds
+                , roundTotal = roundTotal
+              }
