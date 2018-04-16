@@ -1,6 +1,6 @@
 module View exposing (..)
 
-import Html exposing (button, div, h1, h3, input, text)
+import Html exposing (button, div, h1, h3, input, p, text)
 import Html.Attributes exposing (placeholder, type_)
 import Html.Events exposing (onClick, onInput)
 import Update
@@ -107,11 +107,18 @@ roundStateUI round =
     scoreDisplay "Score" round.score
 
 
-roundDisplay : Round -> Html.Html Update.Msg
-roundDisplay round =
+roundDisplay : Int -> Round -> Html.Html Update.Msg
+roundDisplay index round =
   div
     []
-    [ text ("Dealer: " ++ playerString round.dealer)
+    [ p
+        []
+        [ text ("Round " ++
+            toString (index + 1) ++
+            " - " ++
+            "Dealer: " ++
+            playerString round.dealer)
+        ]
     , roundStateUI round
     , Html.hr [] []
     ]
@@ -122,6 +129,6 @@ view model =
   div
     []
     [ h1 [] [ text "Gin Score" ]
-    , div [] (List.map roundDisplay model.rounds)
+    , div [] (List.indexedMap roundDisplay (List.reverse model.rounds))
     , scoreDisplay "Sum of Rounds" model.roundTotal
     ]

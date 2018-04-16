@@ -1,6 +1,6 @@
 module Update exposing (..)
 
-import Model exposing (Model, Player(..), Round, Score, playerScore)
+import Model exposing (Model, Player(..), Round, Score, playerScore, roundInit)
 
 
 type Msg
@@ -34,6 +34,60 @@ updateScore player newScore scoreList =
         ]
 
 
+addWinner :  Round -> Player -> Round
+addWinner round knocker =
+  let
+    nonKnocker =
+      case knocker of
+        PlayerOne -> PlayerTwo
+        PlayerTwo -> PlayerOne
+
+    knockerScore =
+      playerScore knocker round.deadwood
+
+    poneScore =
+      playerScore nonKnocker round.deadwood
+
+    winner =
+      if knockerScore > 0 && knockerScore <= poneScore then
+        nonKnocker
+      else
+        knocker
+
+    loser =
+      case winner of
+        PlayerOne -> PlayerTwo
+        PlayerTwo -> PlayerOne
+
+    winnerScore =
+      if winner == knocker then
+        0
+      else
+        10
+
+    loserScore = 0
+
+  in
+    { round |
+        winner = Just winner,
+        score =
+          [ Score winner winnerScore
+          , Score loser loserScore
+          ]
+    }
+
+
+handleSubmit : Round -> Round
+handleSubmit round =
+  case round.knocker of
+    Nothing ->
+      round
+    Just knocker ->
+      addWinner
+        round
+        knocker
+
+
 update : Msg -> Model -> Model
 update msg model =
   let
@@ -53,8 +107,22 @@ update msg model =
                 model
               Ok score ->
                 let
-                  updatedRound = { r | deadwood = (updateScore player score r.deadwood) }
+                  deadwood =
+                    updateScore player score r.deadwood
+
+                  updatedRound =
+                    { r | deadwood = deadwood }
+
                 in
                   { model | rounds = updatedRound :: tail }
           SubmitRound ->
-            model
+            let
+              updatedRound =
+                handleSubmit r
+
+              nextDealer =
+                case r.dealer of
+                  PlayerOne -> PlayerTwo
+                  PlayerTwo -> PlayerOne
+            in
+              { model | rounds = (roundInit nextDealer) :: updatedRound :: tail }

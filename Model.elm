@@ -6,6 +6,7 @@ module Model
     , Score
     , init
     , playerScore
+    , roundInit
     )
 
 --Game State:
