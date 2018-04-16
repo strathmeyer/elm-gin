@@ -57,9 +57,9 @@ playerString : Player -> String
 playerString player =
   case player of
     PlayerOne ->
-      "One"
+      "A"
     PlayerTwo ->
-      "Two"
+      "B"
 
 
 hasPlayer : Maybe Player -> Bool
