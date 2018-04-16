@@ -165,7 +165,7 @@ roundDisplay index round =
 gameScore : Model -> List (Html.Html Update.Msg)
 gameScore model =
   let
-    basicDisplay = [ scoreDisplay "Sum of Rounds" model.roundTotal ]
+    basicDisplay = [ scoreDisplay "Total" model.roundTotal ]
   in
     case model.state of
       InProgress ->
@@ -173,7 +173,7 @@ gameScore model =
       Completed ->
         basicDisplay ++
           [ scoreDisplay "Box Score" model.boxTotal
-          , scoreDisplay "Total score" model.total
+          , scoreDisplay "Final" model.total
           ]
 
 
