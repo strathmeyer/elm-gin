@@ -5,7 +5,7 @@ import Model exposing (Model, Player(..), Round, Score, playerScore)
 
 type Msg
   = Knock Player
-  | RoundScore Player String
+  | Deadwood Player String
   | SubmitRound
 
 
@@ -14,25 +14,24 @@ addKnocker player round =
   { round | knocker = Just player }
 
 
-updateScore : Player -> Int -> Round -> Round
-updateScore player score round =
+updateScore : Player -> Int -> List Score -> List Score
+updateScore player newScore scoreList =
   let
     playerOneScore =
-      playerScore PlayerOne round.score
+      playerScore PlayerOne scoreList
 
     playerTwoScore =
-      playerScore PlayerTwo round.score
+      playerScore PlayerTwo scoreList
   in
-    { round | score = case player of
+    case player of
       PlayerOne ->
-        [ Score PlayerOne score
+        [ Score PlayerOne newScore
         , Score PlayerTwo playerTwoScore
         ]
       PlayerTwo ->
         [ Score PlayerOne playerOneScore
-        , Score PlayerTwo score
+        , Score PlayerTwo newScore
         ]
-    }
 
 
 update : Msg -> Model -> Model
@@ -48,11 +47,14 @@ update msg model =
         case msg of
           Knock player ->
             { model | rounds = (addKnocker player r) :: tail }
-          RoundScore player string ->
+          Deadwood player string ->
             case String.toInt string of
               Err e ->
                 model
               Ok score ->
-                { model | rounds = (updateScore player score r) :: tail }
+                let
+                  updatedRound = { r | deadwood = (updateScore player score r.deadwood) }
+                in
+                  { model | rounds = updatedRound :: tail }
           SubmitRound ->
             model

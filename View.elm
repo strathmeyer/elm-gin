@@ -34,6 +34,7 @@ scoreDisplay title scoreList =
         [ text ("Player Two: " ++ playerTwoScore) ]
       ]
 
+
 knockButtons : Html.Html Update.Msg
 knockButtons =
   div
@@ -65,8 +66,8 @@ hasPlayer player =
       True
 
 
-scoreInput : Html.Html Update.Msg
-scoreInput =
+deadwoodInput : Html.Html Update.Msg
+deadwoodInput =
   div
     []
     [ Html.label
@@ -75,7 +76,7 @@ scoreInput =
       , input
           [ placeholder "Player One"
           , type_ "number"
-          , onInput (Update.RoundScore Model.PlayerOne)
+          , onInput (Update.Deadwood Model.PlayerOne)
           ]
           []
       ]
@@ -85,7 +86,7 @@ scoreInput =
       , input
           [ placeholder "Player Two"
           , type_ "number"
-          , onInput (Update.RoundScore Model.PlayerTwo)
+          , onInput (Update.Deadwood Model.PlayerTwo)
           ]
           []
       ]
@@ -95,12 +96,13 @@ scoreInput =
         []
     ]
 
+
 roundStateUI : Round -> Html.Html Update.Msg
 roundStateUI round =
   if not (hasPlayer round.knocker) then
     knockButtons
   else if not (hasPlayer round.winner) then
-    scoreInput
+    deadwoodInput
   else
     scoreDisplay "Score" round.score
 
