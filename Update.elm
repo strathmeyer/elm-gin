@@ -4,8 +4,9 @@ import Model exposing (Model, Player(..), Round, Score, playerScore)
 
 
 type Msg
-    = Knock Player
-    | RoundScore Player String
+  = Knock Player
+  | RoundScore Player String
+  | SubmitRound
 
 
 addKnocker : Player -> Round -> Round
