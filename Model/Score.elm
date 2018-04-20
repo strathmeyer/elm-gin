@@ -54,5 +54,21 @@ update player newScore score =
     PlayerTwo ->
       Score score.playerOne newScore
 
+
+addBonus : Score -> Score
+addBonus roundTotal =
+  let
+    bonus =
+      if (min roundTotal) == 0 then
+        200
+      else
+        100
+  in
+    if roundTotal.playerOne > roundTotal.playerTwo then
+      sum [ Score bonus 0, roundTotal ]
+    else
+      sum [ Score 0 bonus, roundTotal ]
+
+
 init =
   Score 0 0

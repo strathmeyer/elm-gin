@@ -50,21 +50,6 @@ boxScore rounds =
       ((winCount PlayerTwo rounds) * 20)
 
 
-winnerBonus : Score -> Score
-winnerBonus roundTotal =
-  let
-    bonus =
-      if (Score.min roundTotal) == 0 then
-        200
-      else
-        100
-  in
-    if roundTotal.playerOne > roundTotal.playerTwo then
-      Score bonus 0
-    else
-      Score 0 bonus
-
-
 checkForGameEnd : Model -> Model
 checkForGameEnd model =
   if (Score.max model.roundTotal) < 100 then
@@ -77,8 +62,7 @@ checkForGameEnd model =
       total =
         Score.sum
           [ boxTotal
-          , model.roundTotal
-          , winnerBonus model.roundTotal
+          , Score.addBonus model.roundTotal
           ]
     in
       { model
