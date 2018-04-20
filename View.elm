@@ -45,25 +45,21 @@ scoreDisplay title score =
     ]
 
 
+knockButton : Player -> Html.Html Update.Msg
+knockButton player =
+  button
+    [ onClick (Update.Knock player)
+    , class "btn btn-primary btn-block"
+    , type_ "button"
+    ]
+    [ text (playerString player ++ " Knocks") ]
+
+
 knockButtons : Html.Html Update.Msg
 knockButtons =
   row
-    [ col
-      [ button
-        [ onClick (Update.Knock PlayerOne)
-        , class "btn btn-primary btn-block"
-        , type_ "button"
-        ]
-        [ text (playerString PlayerOne ++ " Knocks") ]
-      ]
-    , col
-      [ button
-        [ onClick (Update.Knock PlayerTwo)
-        , class "btn btn-primary btn-block"
-        , type_ "button"
-        ]
-        [ text (playerString PlayerTwo ++ " Knocks") ]
-      ]
+    [ col [ knockButton PlayerOne ]
+    , col [ knockButton PlayerTwo ]
     ]
 
 
@@ -154,6 +150,7 @@ roundDisplay index round =
       , roundStateUI round
       ]
     ]
+
 
 gameScore : Model -> List (Html.Html Update.Msg)
 gameScore model =
