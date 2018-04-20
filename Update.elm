@@ -4,7 +4,6 @@ import Model
   exposing
   ( GameState(..)
   , Model
-  , roundInit
   )
 
 import Model.Player as Player exposing ( Player(..) )
@@ -23,6 +22,7 @@ updateScore player newScore score =
   case player of
     PlayerOne ->
       Score newScore score.playerTwo
+
     PlayerTwo ->
       Score score.playerOne newScore
 
@@ -32,6 +32,7 @@ handleSubmit round =
   case round.knocker of
     Nothing ->
       round
+
     Just knocker ->
       addWinner
         round
@@ -135,7 +136,7 @@ update msg model =
               nextDealer = Player.other r.dealer
 
               rounds =
-                (roundInit nextDealer) :: updatedRound :: tail
+                (Round.init nextDealer) :: updatedRound :: tail
 
               roundTotal
                 = Score.sum (List.map .score rounds)

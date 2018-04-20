@@ -3,13 +3,12 @@ module Model
     ( GameState(..)
     , Model
     , init
-    , roundInit
     )
 
 
-import Model.Player exposing ( Player(..) )
-import Model.Round exposing ( Round )
-import Model.Score exposing ( Score )
+import Model.Player as Player exposing ( Player(..) )
+import Model.Round as Round exposing ( Round )
+import Model.Score as Score exposing ( Score )
 
 
 type GameState = InProgress | Completed
@@ -27,28 +26,13 @@ type alias Model =
     }
 
 
-twoPlayerScoreInit =
-  Score 0 0
-
-
-
-roundInit : Player -> Round
-roundInit dealer =
-  Round
-    dealer
-    Nothing
-    Nothing
-    twoPlayerScoreInit
-    twoPlayerScoreInit
-
-
 init : Model
 init =
   Model
     ""
     ""
-    [ roundInit PlayerOne ]
+    [ Round.init PlayerOne ]
     InProgress
-    twoPlayerScoreInit
-    twoPlayerScoreInit
-    twoPlayerScoreInit
+    Score.init
+    Score.init
+    Score.init

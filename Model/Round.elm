@@ -59,3 +59,13 @@ addWinner round knocker =
         winner = Just winner,
         score = score
     }
+
+
+init : Player -> Round
+init dealer =
+  Round
+    dealer
+    Nothing
+    Nothing
+    Score.init
+    Score.init

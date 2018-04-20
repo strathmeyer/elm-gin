@@ -37,8 +37,13 @@ max score =
     score.playerOne
     score.playerTwo
 
+
 min : Score -> Int
 min score =
   Basics.min
     score.playerOne
     score.playerTwo
+
+
+init =
+  Score 0 0
