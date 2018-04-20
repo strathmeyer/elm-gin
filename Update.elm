@@ -8,7 +8,7 @@ import Model
   )
 
 import Model.Player as Player exposing ( Player(..) )
-import Model.Round as Round exposing ( Round )
+import Model.Round as Round exposing ( Round, addKnocker, addWinner )
 import Model.Score as Score exposing ( Score )
 
 
@@ -18,11 +18,6 @@ type Msg
   | SubmitRound
 
 
-addKnocker : Player -> Round -> Round
-addKnocker player round =
-  { round | knocker = Just player }
-
-
 updateScore : Player -> Int -> Score -> Score
 updateScore player newScore score =
   case player of
@@ -30,49 +25,6 @@ updateScore player newScore score =
       Score newScore score.playerTwo
     PlayerTwo ->
       Score score.playerOne newScore
-
-
-addWinner : Round -> Player -> Round
-addWinner round knocker =
-  let
-    nonKnocker = Player.other knocker
-
-    knockerScore =
-      Score.get knocker round.deadwood
-
-    poneScore =
-      Score.get nonKnocker round.deadwood
-
-    winner =
-      if knockerScore > 0 && knockerScore >= poneScore then
-        nonKnocker
-      else
-        knocker
-
-    winnerScore =
-      if winner == knocker then
-        if knockerScore == 0 then
-          -- gin
-          poneScore + 20
-        else
-          -- normal score
-          poneScore - knockerScore
-      else
-        -- knocker was undercut
-        (knockerScore - poneScore) + 10
-
-    score =
-      case winner of
-        PlayerOne ->
-          Score winnerScore 0
-        PlayerTwo ->
-          Score 0 winnerScore
-
-  in
-    { round |
-        winner = Just winner,
-        score = score
-    }
 
 
 handleSubmit : Round -> Round
@@ -98,16 +50,14 @@ boxScore rounds =
         Just winner ->
           winner == player
 
-
     winCount : Player -> List Round -> Int
     winCount player rounds =
       List.length (List.filter (roundWonByPlayer player) rounds)
-
-
   in
     Score
       ((winCount PlayerOne rounds) * 20)
       ((winCount PlayerTwo rounds) * 20)
+
 
 winnerBonus : Score -> Score
 winnerBonus roundTotal =
