@@ -9,7 +9,7 @@ import Model
 
 import Model.Player as Player exposing ( Player(..) )
 import Model.Round as Round exposing ( Round )
-import Model.Score as Score exposing ( Score, playerScore )
+import Model.Score as Score exposing ( Score )
 
 
 type Msg
@@ -25,18 +25,11 @@ addKnocker player round =
 
 updateScore : Player -> Int -> Score -> Score
 updateScore player newScore score =
-  let
-    playerOneScore =
-      playerScore PlayerOne score
-
-    playerTwoScore =
-      playerScore PlayerTwo score
-  in
-    case player of
-      PlayerOne ->
-        Score newScore playerTwoScore
-      PlayerTwo ->
-        Score playerOneScore newScore
+  case player of
+    PlayerOne ->
+      Score newScore score.playerTwo
+    PlayerTwo ->
+      Score score.playerOne newScore
 
 
 addWinner : Round -> Player -> Round
@@ -44,24 +37,22 @@ addWinner round knocker =
   let
     nonKnocker =
       case knocker of
-        PlayerOne -> PlayerTwo
-        PlayerTwo -> PlayerOne
-
+        PlayerOne ->
+          PlayerTwo
+        PlayerTwo ->
+          PlayerOne
 
     knockerScore =
-      playerScore knocker round.deadwood
-
+      Score.get knocker round.deadwood
 
     poneScore =
-      playerScore nonKnocker round.deadwood
-
+      Score.get nonKnocker round.deadwood
 
     winner =
       if knockerScore > 0 && knockerScore >= poneScore then
         nonKnocker
       else
         knocker
-
 
     winnerScore =
       if winner == knocker then
@@ -126,22 +117,14 @@ boxScore rounds =
 winnerBonus : Score -> Score
 winnerBonus roundTotal =
   let
-    playerOneScore =
-      playerScore PlayerOne roundTotal
-
-
-    playerTwoScore =
-      playerScore PlayerTwo roundTotal
-
-
-    winner = if playerOneScore > playerTwoScore then
+    winner = if roundTotal.playerOne > roundTotal.playerTwo then
       PlayerOne
     else
       PlayerTwo
 
 
     bonus =
-      if min playerOneScore playerTwoScore == 0 then
+      if min roundTotal.playerOne roundTotal.playerTwo == 0 then
         200
       else
         100

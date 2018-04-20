@@ -13,7 +13,7 @@ sum : List Score -> Score
 sum scores =
   let
     playerTotal player =
-      List.sum (List.map (playerScore player) scores)
+      List.sum (List.map (get player) scores)
 
   in
     Score
@@ -21,8 +21,8 @@ sum scores =
       (playerTotal PlayerTwo)
 
 
-playerScore : Player -> Score -> Int
-playerScore player score =
+get : Player -> Score -> Int
+get player score =
   case player of
     PlayerOne ->
       score.playerOne

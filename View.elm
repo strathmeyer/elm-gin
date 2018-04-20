@@ -14,35 +14,27 @@ import Model
 
 import Model.Player exposing ( Player(..) )
 import Model.Round exposing ( Round )
-import Model.Score exposing ( Score, playerScore )
+import Model.Score exposing ( Score )
 
 
 scoreDisplay : String -> Score -> Html.Html Update.Msg
 scoreDisplay title score =
-  let
-    playerOneScore =
-      toString (playerScore PlayerOne score)
-
-    playerTwoScore =
-      toString (playerScore PlayerTwo score)
-
-  in
-    div
-      [ class "row" ]
-      [ div
-        [ class "col text-truncate" ]
-        [ Html.strong [] [ text title ] ]
-      , div
-        [ class "col" ]
-        [ text (playerString PlayerOne
-          ++ ": "
-          ++ playerOneScore) ]
-      , div
-        [ class "col" ]
-        [ text (playerString PlayerTwo
-          ++ ": "
-          ++ playerTwoScore) ]
-      ]
+  div
+    [ class "row" ]
+    [ div
+      [ class "col text-truncate" ]
+      [ Html.strong [] [ text title ] ]
+    , div
+      [ class "col" ]
+      [ text (playerString PlayerOne
+        ++ ": "
+        ++ toString score.playerOne) ]
+    , div
+      [ class "col" ]
+      [ text (playerString PlayerTwo
+        ++ ": "
+        ++ toString score.playerTwo) ]
+    ]
 
 
 knockButtons : Html.Html Update.Msg
@@ -87,10 +79,9 @@ hasPlayer player =
     Just _ ->
       True
 
+
 --<label for="exampleInputEmail1">Email address</label>
 --    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-
-
 deadwoodInput : Html.Html Update.Msg
 deadwoodInput =
   div
