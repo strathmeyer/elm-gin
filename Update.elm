@@ -4,13 +4,14 @@ import Model
   exposing
   ( GameState(..)
   , Model
-  , Player(..)
-  , Round
-  , Score
   , playerScore
   , roundInit
   , sumScores
   )
+
+import Model.Player exposing ( Player(..) )
+import Model.Round exposing ( Round )
+import Model.Score exposing ( Score )
 
 
 type Msg

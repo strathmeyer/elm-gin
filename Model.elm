@@ -2,14 +2,17 @@ module Model
   exposing
     ( GameState(..)
     , Model
-    , Player(..)
-    , Round
-    , Score
     , init
     , playerScore
     , roundInit
     , sumScores
     )
+
+
+import Model.Player exposing ( Player(..) )
+import Model.Round exposing ( Round )
+import Model.Score exposing ( Score )
+
 
 type GameState = InProgress | Completed
 
@@ -37,15 +40,6 @@ sumScores scores =
       (playerTotal PlayerTwo)
 
 
-type Player = PlayerOne | PlayerTwo
-
-
-type alias Score =
-  { playerOne : Int
-  , playerTwo : Int
-  }
-
-
 twoPlayerScoreInit =
   Score 0 0
 
@@ -57,15 +51,6 @@ playerScore player score =
       score.playerOne
     PlayerTwo ->
       score.playerTwo
-
-
-type alias Round =
-  { dealer : Player
-  , knocker : Maybe Player
-  , winner : Maybe Player -- not nec the knocker if undercut
-  , deadwood : Score
-  , score : Score
-  }
 
 
 roundInit : Player -> Round

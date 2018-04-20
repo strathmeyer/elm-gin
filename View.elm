@@ -9,11 +9,13 @@ import Model
   exposing
     ( GameState(..)
     , Model
-    , Player(..)
-    , Round
-    , Score
     , playerScore
     )
+
+
+import Model.Player exposing ( Player(..) )
+import Model.Round exposing ( Round )
+import Model.Score exposing ( Score )
 
 
 scoreDisplay : String -> Score -> Html.Html Update.Msg
@@ -102,7 +104,7 @@ deadwoodInput =
         , type_ "number"
         , Html.Attributes.min "0"
         , Html.Attributes.max "100"
-        , onInput (Update.Deadwood Model.PlayerOne)
+        , onInput (Update.Deadwood PlayerOne)
         ]
         []
       ]
@@ -114,7 +116,7 @@ deadwoodInput =
         , type_ "number"
         , Html.Attributes.min "0"
         , Html.Attributes.max "100"
-        , onInput (Update.Deadwood Model.PlayerTwo)
+        , onInput (Update.Deadwood PlayerTwo)
         ]
         []
       ]
