@@ -112,57 +112,39 @@ boxScore rounds =
 winnerBonus : Score -> Score
 winnerBonus roundTotal =
   let
-    winner = if roundTotal.playerOne > roundTotal.playerTwo then
-      PlayerOne
-    else
-      PlayerTwo
-
-
     bonus =
-      if min roundTotal.playerOne roundTotal.playerTwo == 0 then
+      if (Score.min roundTotal) == 0 then
         200
       else
         100
-
-
   in
-    case winner of
-      PlayerOne ->
-        Score bonus 0
-
-      PlayerTwo ->
-        Score 0 bonus
+    if roundTotal.playerOne > roundTotal.playerTwo then
+      Score bonus 0
+    else
+      Score 0 bonus
 
 
 checkForGameEnd : Model -> Model
 checkForGameEnd model =
-  let
-    maxScore =
-      max
-        model.roundTotal.playerOne
-        model.roundTotal.playerTwo
+  if (Score.max model.roundTotal) < 100 then
+    model
+  else
+    let
+      boxTotal =
+        boxScore model.rounds
 
-  in
-    if maxScore < 100 then
-      model
-    else
-      let
-        boxTotal =
-          boxScore model.rounds
-
-        total =
-          Score.sum
-            [ boxTotal
-            , model.roundTotal
-            , winnerBonus model.roundTotal
-            ]
-
-      in
-        { model
-        | state = Completed
-        , boxTotal = boxTotal
-        , total = total
-        }
+      total =
+        Score.sum
+          [ boxTotal
+          , model.roundTotal
+          , winnerBonus model.roundTotal
+          ]
+    in
+      { model
+      | state = Completed
+      , boxTotal = boxTotal
+      , total = total
+      }
 
 
 update : Msg -> Model -> Model

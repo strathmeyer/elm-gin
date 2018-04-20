@@ -3,6 +3,7 @@ module Model.Score exposing (..)
 
 import Model.Player exposing (..)
 
+
 type alias Score =
   { playerOne : Int
   , playerTwo : Int
@@ -14,7 +15,6 @@ sum scores =
   let
     playerTotal player =
       List.sum (List.map (get player) scores)
-
   in
     Score
       (playerTotal PlayerOne)
@@ -26,5 +26,19 @@ get player score =
   case player of
     PlayerOne ->
       score.playerOne
+
     PlayerTwo ->
       score.playerTwo
+
+
+max : Score -> Int
+max score =
+  Basics.max
+    score.playerOne
+    score.playerTwo
+
+min : Score -> Int
+min score =
+  Basics.min
+    score.playerOne
+    score.playerTwo
