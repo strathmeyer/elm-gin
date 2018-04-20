@@ -36,13 +36,9 @@ updateScore player newScore score =
   in
     case player of
       PlayerOne ->
-        [ SingleScore PlayerOne newScore
-        , SingleScore PlayerTwo playerTwoScore
-        ]
+        Score newScore playerTwoScore
       PlayerTwo ->
-        [ SingleScore PlayerOne playerOneScore
-        , SingleScore PlayerTwo newScore
-        ]
+        Score playerOneScore newScore
 
 
 addWinner : Round -> Player -> Round
@@ -53,11 +49,14 @@ addWinner round knocker =
         PlayerOne -> PlayerTwo
         PlayerTwo -> PlayerOne
 
+
     knockerScore =
       playerScore knocker round.deadwood
 
+
     poneScore =
       playerScore nonKnocker round.deadwood
+
 
     winner =
       if knockerScore > 0 && knockerScore >= poneScore then
@@ -65,10 +64,6 @@ addWinner round knocker =
       else
         knocker
 
-    loser =
-      case winner of
-        PlayerOne -> PlayerTwo
-        PlayerTwo -> PlayerOne
 
     winnerScore =
       if winner == knocker then
@@ -82,13 +77,17 @@ addWinner round knocker =
         -- knocker was undercut
         (knockerScore - poneScore) + 10
 
+    score =
+      case winner of
+        PlayerOne ->
+          Score winnerScore 0
+        PlayerTwo ->
+          Score 0 winnerScore
+
   in
     { round |
         winner = Just winner,
-        score =
-          [ SingleScore winner winnerScore
-          , SingleScore loser 0
-          ]
+        score = score
     }
 
 
@@ -102,6 +101,7 @@ handleSubmit round =
         round
         knocker
 
+
 boxScore : List Round -> Score
 boxScore rounds =
   let
@@ -114,14 +114,16 @@ boxScore rounds =
         Just winner ->
           winner == player
 
+
     winCount : Player -> List Round -> Int
     winCount player rounds =
       List.length (List.filter (roundWonByPlayer player) rounds)
 
+
   in
-    [ SingleScore PlayerOne ((winCount PlayerOne rounds) * 20)
-    , SingleScore PlayerTwo ((winCount PlayerTwo rounds) * 20)
-    ]
+    Score
+      ((winCount PlayerOne rounds) * 20)
+      ((winCount PlayerTwo rounds) * 20)
 
 winnerBonus : Score -> Score
 winnerBonus roundTotal =
@@ -129,33 +131,38 @@ winnerBonus roundTotal =
     playerOneScore =
       playerScore PlayerOne roundTotal
 
+
     playerTwoScore =
       playerScore PlayerTwo roundTotal
+
 
     winner = if playerOneScore > playerTwoScore then
       PlayerOne
     else
       PlayerTwo
 
-    loser =
-      case winner of
-        PlayerOne -> PlayerTwo
-        PlayerTwo -> PlayerOne
+    -- bonus is 200 for a skunk
+    bonus =
+      100
+
 
   in
-    -- bonus is 200 for a skunk
-    [ SingleScore winner 100
-    , SingleScore loser 0
-    ]
+    case winner of
+      PlayerOne ->
+        Score bonus 0
+
+      PlayerTwo ->
+        Score 0 bonus
 
 
 checkForGameEnd : Model -> Model
 checkForGameEnd model =
   let
     maxScore =
-      Maybe.withDefault
-        0
-        (List.maximum (List.map .score model.roundTotal))
+      max
+        model.roundTotal.playerOne
+        model.roundTotal.playerTwo
+
   in
     if maxScore < 100 then
       model

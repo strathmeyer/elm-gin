@@ -33,9 +33,9 @@ sumScores scores =
       List.sum (List.map (playerScore player) scores)
 
   in
-    [ SingleScore PlayerOne (playerTotal PlayerOne)
-    , SingleScore PlayerTwo (playerTotal PlayerTwo)
-    ]
+    Score
+      (playerTotal PlayerOne)
+      (playerTotal PlayerTwo)
 
 
 type Player = PlayerOne | PlayerTwo
@@ -47,28 +47,23 @@ type alias SingleScore =
   }
 
 
-type alias Score = List SingleScore
+type alias Score =
+  { playerOne : Int
+  , playerTwo : Int
+  }
 
 
 twoPlayerScoreInit =
-  [
-    SingleScore PlayerOne 0,
-    SingleScore PlayerTwo 0
-  ]
-
-
-findScore : Player -> Score -> Maybe SingleScore
-findScore player score =
-  List.head (List.filter (\n -> n.player == player) score)
+  Score 0 0
 
 
 playerScore : Player -> Score -> Int
 playerScore player score =
-  case findScore player score of
-    Nothing ->
-      0
-    Just score ->
-      score.score
+  case player of
+    PlayerOne ->
+      score.playerOne
+    PlayerTwo ->
+      score.playerTwo
 
 
 type alias Round =
