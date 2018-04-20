@@ -17,16 +17,6 @@ type Msg
   | SubmitRound
 
 
-updateScore : Player -> Int -> Score -> Score
-updateScore player newScore score =
-  case player of
-    PlayerOne ->
-      Score newScore score.playerTwo
-
-    PlayerTwo ->
-      Score score.playerOne newScore
-
-
 handleSubmit : Round -> Round
 handleSubmit round =
   case round.knocker of
@@ -120,11 +110,10 @@ update msg model =
               Ok score ->
                 let
                   deadwood =
-                    updateScore player score r.deadwood
+                    Score.update player score r.deadwood
 
                   updatedRound =
                     { r | deadwood = deadwood }
-
                 in
                   { model | rounds = updatedRound :: tail }
 
@@ -140,7 +129,6 @@ update msg model =
 
               roundTotal
                 = Score.sum (List.map .score rounds)
-
             in
               checkForGameEnd { model
                 | rounds = rounds

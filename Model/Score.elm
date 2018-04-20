@@ -45,5 +45,14 @@ min score =
     score.playerTwo
 
 
+update : Player -> Int -> Score -> Score
+update player newScore score =
+  case player of
+    PlayerOne ->
+      Score newScore score.playerTwo
+
+    PlayerTwo ->
+      Score score.playerOne newScore
+
 init =
   Score 0 0
