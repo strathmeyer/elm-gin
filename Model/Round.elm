@@ -1,4 +1,12 @@
-module Model.Round exposing (..)
+module Model.Round
+  exposing
+    ( Round
+    , addDeadwood
+    , addKnocker
+    , addWinner
+    , boxScore
+    , init
+    )
 
 
 import Model.Player as Player exposing (Player(..))

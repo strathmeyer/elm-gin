@@ -169,18 +169,11 @@ gameScore model =
 
 view : Model -> Html.Html Update.Msg
 view model =
-  let
-    rounds = case model.state of
-      InProgress ->
-        model.rounds
-      Completed ->
-        Maybe.withDefault [] (List.tail model.rounds)
-  in
-    div
-      [ class "container" ]
-      ([ row
-        [ col
-          [ h1 [] [ text "Gin Score" ] ]
-        ]
-      ] ++ (List.indexedMap roundDisplay (List.reverse rounds))
-        ++ (gameScore model))
+  div
+    [ class "container" ]
+    ([ row
+      [ col
+        [ h1 [] [ text "Gin Score" ] ]
+      ]
+    ] ++ (List.indexedMap roundDisplay (List.reverse model.rounds))
+      ++ (gameScore model))

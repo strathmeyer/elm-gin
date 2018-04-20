@@ -3,6 +3,7 @@ module Model
     ( GameState(..)
     , Model
     , init
+    , lastDealer
     )
 
 
@@ -24,6 +25,16 @@ type alias Model =
     , boxTotal : Score
     , total : Score
     }
+
+
+lastDealer : Model -> Player
+lastDealer model =
+  case List.head model.rounds of
+    Nothing ->
+      PlayerTwo
+
+    Just round ->
+      round.dealer
 
 
 init : Model

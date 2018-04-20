@@ -4,6 +4,7 @@ import Model
   exposing
   ( GameState(..)
   , Model
+  , lastDealer
   )
 
 import Model.Player as Player exposing ( Player(..) )
@@ -32,7 +33,13 @@ handleSubmit round =
 checkForGameEnd : Model -> Model
 checkForGameEnd model =
   if (Score.max model.roundTotal) < 100 then
-    model
+    let
+      nextRound =
+        Model.lastDealer model
+        |> Player.other
+        |> Round.init
+    in
+      { model | rounds = nextRound :: model.rounds }
   else
     let
       boxTotal =
@@ -92,13 +99,8 @@ update msg model =
               updatedRound =
                 handleSubmit r
 
-              nextDealer = Player.other r.dealer
-
-              -- move the Round.init to checkForGameEnd?
-              -- that way we won't have to have wonky view logic to
-              -- hide the latest round
               rounds =
-                (Round.init nextDealer) :: updatedRound :: tail
+                updatedRound :: tail
 
               roundTotal
                 = Score.sum (List.map .score rounds)
