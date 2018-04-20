@@ -4,7 +4,6 @@ import Model
   exposing
   ( GameState(..)
   , Model
-  , lastDealer
   )
 
 import Model.Player as Player exposing ( Player(..) )
@@ -33,13 +32,7 @@ handleSubmit round =
 checkForGameEnd : Model -> Model
 checkForGameEnd model =
   if (Score.max model.roundTotal) < 100 then
-    let
-      nextRound =
-        Model.lastDealer model
-        |> Player.other
-        |> Round.init
-    in
-      { model | rounds = nextRound :: model.rounds }
+    Model.initNextRound model
   else
     let
       boxTotal =
@@ -72,6 +65,12 @@ updateLatestRound model updater =
         { model | rounds = updater r :: tail }
 
 
+updateRoundTotal : Model -> Model
+updateRoundTotal model =
+  { model
+  | roundTotal = Score.sum (List.map .score model.rounds)
+  }
+
 update : Msg -> Model -> Model
 update msg model =
   let
@@ -90,22 +89,6 @@ update msg model =
             updateLatestRound model (addDeadwood player score)
 
       SubmitRound ->
-        case round of
-          Nothing ->
-            model
-
-          Just r ->
-            let
-              updatedRound =
-                handleSubmit r
-
-              rounds =
-                updatedRound :: tail
-
-              roundTotal
-                = Score.sum (List.map .score rounds)
-            in
-              checkForGameEnd { model
-                | rounds = rounds
-                , roundTotal = roundTotal
-              }
+        updateLatestRound model handleSubmit
+        |> updateRoundTotal
+        |> checkForGameEnd

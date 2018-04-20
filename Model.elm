@@ -3,7 +3,7 @@ module Model
     ( GameState(..)
     , Model
     , init
-    , lastDealer
+    , initNextRound
     )
 
 
@@ -27,14 +27,21 @@ type alias Model =
     }
 
 
-lastDealer : Model -> Player
-lastDealer model =
-  case List.head model.rounds of
-    Nothing ->
-      PlayerTwo
+initNextRound : Model -> Model
+initNextRound model =
+  let
+    nextDealer =
+      case List.head model.rounds of
+        Nothing ->
+          PlayerOne
 
-    Just round ->
-      round.dealer
+        Just round ->
+          Player.other round.dealer
+
+    nextRound =
+      Round.init nextDealer
+  in
+    { model | rounds = nextRound :: model.rounds }
 
 
 init : Model
