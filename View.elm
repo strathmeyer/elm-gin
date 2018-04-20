@@ -12,37 +12,43 @@ import Model
     )
 
 
-import Model.Player exposing ( Player(..) )
-import Model.Round exposing ( Round )
-import Model.Score exposing ( Score )
+import Model.Player as Player exposing ( Player(..) )
+import Model.Round as Round exposing ( Round )
+import Model.Score as Score exposing ( Score )
+
+
+col : List (Html.Html msg) -> Html.Html msg
+col contents =
+  div [ class "col" ] contents
+
+
+row : List (Html.Html msg) -> Html.Html msg
+row contents =
+  div [ class "row" ] contents
+
+
+singleScoreDisplay : Player -> Score -> String
+singleScoreDisplay player score =
+  playerString player
+  ++ ": "
+  ++ toString (Score.get player score)
 
 
 scoreDisplay : String -> Score -> Html.Html Update.Msg
 scoreDisplay title score =
-  div
-    [ class "row" ]
+  row
     [ div
       [ class "col text-truncate" ]
       [ Html.strong [] [ text title ] ]
-    , div
-      [ class "col" ]
-      [ text (playerString PlayerOne
-        ++ ": "
-        ++ toString score.playerOne) ]
-    , div
-      [ class "col" ]
-      [ text (playerString PlayerTwo
-        ++ ": "
-        ++ toString score.playerTwo) ]
+    , col [ text (singleScoreDisplay PlayerOne score) ]
+    , col [ text (singleScoreDisplay PlayerTwo score) ]
     ]
 
 
 knockButtons : Html.Html Update.Msg
 knockButtons =
-  div
-    [ class "row" ]
-    [ div
-      [ class "col" ]
+  row
+    [ col
       [ button
         [ onClick (Update.Knock PlayerOne)
         , class "btn btn-primary btn-block"
@@ -50,8 +56,7 @@ knockButtons =
         ]
         [ text (playerString PlayerOne ++ " Knocks") ]
       ]
-    , div
-      [ class "col" ]
+    , col
       [ button
         [ onClick (Update.Knock PlayerTwo)
         , class "btn btn-primary btn-block"
@@ -84,10 +89,8 @@ hasPlayer player =
 --    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
 deadwoodInput : Html.Html Update.Msg
 deadwoodInput =
-  div
-    [ class "row" ]
-    [ div
-      [ class "col" ]
+  row
+    [ col
       [ input
         [ placeholder (playerString PlayerOne)
         , class "form-control"
@@ -98,8 +101,7 @@ deadwoodInput =
         ]
         []
       ]
-    , div
-      [ class "col" ]
+    , col
       [ input
         [ placeholder (playerString PlayerTwo)
         , class "form-control"
@@ -110,8 +112,7 @@ deadwoodInput =
         ]
         []
       ]
-    , div
-      [ class "col" ]
+    , col
       [ button
         [ type_ "button"
         , class "btn btn-block btn-primary"
@@ -129,10 +130,8 @@ roundStateUI round =
   else if not (hasPlayer round.winner) then
     deadwoodInput
   else
-    div
-      [ class "row" ]
-      [ div
-        [ class "col" ]
+    row
+      [ col
         [ scoreDisplay "Deadwood" round.deadwood
         , scoreDisplay "Score" round.score
         ]
@@ -143,10 +142,8 @@ roundDisplay : Int -> Round -> Html.Html Update.Msg
 roundDisplay index round =
   div
     [ class "row pb-4 mb-4 border-bottom" ]
-    [ div
-      [ class "col" ]
-      [ div
-        [ class "row" ]
+    [ col
+      [ row
         [ p
           [ class "col" ]
           [ text ("Round " ++ toString (index + 1))]
@@ -184,10 +181,8 @@ view model =
   in
     div
       [ class "container" ]
-      ([ div
-        [ class "row" ]
-        [ div
-          [ class "col" ]
+      ([ row
+        [ col
           [ h1 [] [ text "Gin Score" ] ]
         ]
       ] ++ (List.indexedMap roundDisplay (List.reverse rounds))
