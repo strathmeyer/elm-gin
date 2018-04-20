@@ -45,10 +45,32 @@ addWinner round knocker =
         else
           poneDeadwood - knockerDeadwood
   in
-    { round |
-        winner = Just winner,
-        score = Score.update winner winnerScore Score.init
+    { round
+    | winner = Just winner
+    , score = Score.update winner winnerScore Score.init
     }
+
+
+roundWonByPlayer : Player -> Round -> Bool
+roundWonByPlayer player round =
+  case round.winner of
+    Nothing ->
+      False
+
+    Just winner ->
+      winner == player
+
+
+winCount : Player -> List Round -> Int
+winCount player rounds =
+  List.length (List.filter (roundWonByPlayer player) rounds)
+
+
+boxScore : List Round -> Score
+boxScore rounds =
+  Score
+    ((winCount PlayerOne rounds) * 20)
+    ((winCount PlayerTwo rounds) * 20)
 
 
 init : Player -> Round

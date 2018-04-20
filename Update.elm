@@ -29,27 +29,6 @@ handleSubmit round =
         knocker
 
 
-boxScore : List Round -> Score
-boxScore rounds =
-  let
-    roundWonByPlayer : Player -> Round -> Bool
-    roundWonByPlayer player round =
-      case round.winner of
-        Nothing ->
-          False
-
-        Just winner ->
-          winner == player
-
-    winCount : Player -> List Round -> Int
-    winCount player rounds =
-      List.length (List.filter (roundWonByPlayer player) rounds)
-  in
-    Score
-      ((winCount PlayerOne rounds) * 20)
-      ((winCount PlayerTwo rounds) * 20)
-
-
 checkForGameEnd : Model -> Model
 checkForGameEnd model =
   if (Score.max model.roundTotal) < 100 then
@@ -57,7 +36,7 @@ checkForGameEnd model =
   else
     let
       boxTotal =
-        boxScore model.rounds
+        Round.boxScore model.rounds
 
       total =
         Score.sum
