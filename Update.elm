@@ -25,8 +25,8 @@ handleSubmit round =
 
     Just knocker ->
       addWinner
-        round
         knocker
+        round
 
 
 addDeadwood : Player -> Int -> Round -> Round
@@ -39,8 +39,8 @@ addKnocker player round =
   { round | knocker = Just player }
 
 
-addWinner : Round -> Player -> Round
-addWinner round knocker =
+addWinner : Player -> Round -> Round
+addWinner knocker round =
   let
     knockerDeadwood =
       Score.get knocker round.deadwood
@@ -93,8 +93,8 @@ checkForGameEnd model =
       }
 
 
-updateLatestRound : Model -> (Round -> Round) -> Model
-updateLatestRound model updater =
+updateLatestRound : (Round -> Round) -> Model -> Model
+updateLatestRound updater model =
   let
     round = List.head model.rounds
     tail = Maybe.withDefault [] (List.tail model.rounds)
@@ -113,6 +113,7 @@ updateRoundTotal model =
   | roundTotal = Score.sum (List.map .score model.rounds)
   }
 
+
 update : Msg -> Model -> Model
 update msg model =
   let
@@ -121,16 +122,16 @@ update msg model =
   in
     case msg of
       Knock player ->
-        updateLatestRound model (addKnocker player)
+        updateLatestRound (addKnocker player) model
 
       Deadwood player string ->
         case String.toInt string of
           Err e ->
             model
           Ok score ->
-            updateLatestRound model (addDeadwood player score)
+            updateLatestRound (addDeadwood player score) model
 
       SubmitRound ->
-        updateLatestRound model handleSubmit
+        updateLatestRound handleSubmit model
         |> updateRoundTotal
         |> checkForGameEnd
