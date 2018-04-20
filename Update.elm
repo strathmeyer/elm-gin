@@ -143,6 +143,7 @@ winnerBonus roundTotal =
         PlayerTwo -> PlayerOne
 
   in
+    -- bonus is 200 for a skunk
     [ SingleScore winner 100
     , SingleScore loser 0
     ]
