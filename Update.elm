@@ -35,12 +35,7 @@ updateScore player newScore score =
 addWinner : Round -> Player -> Round
 addWinner round knocker =
   let
-    nonKnocker =
-      case knocker of
-        PlayerOne ->
-          PlayerTwo
-        PlayerTwo ->
-          PlayerOne
+    nonKnocker = Player.other knocker
 
     knockerScore =
       Score.get knocker round.deadwood
@@ -205,10 +200,7 @@ update msg model =
               updatedRound =
                 handleSubmit r
 
-              nextDealer =
-                case r.dealer of
-                  PlayerOne -> PlayerTwo
-                  PlayerTwo -> PlayerOne
+              nextDealer = Player.other r.dealer
 
               rounds =
                 (roundInit nextDealer) :: updatedRound :: tail
