@@ -5,7 +5,6 @@ module Model
     , Player(..)
     , Round
     , Score
-    , SingleScore
     , init
     , playerScore
     , roundInit
@@ -39,12 +38,6 @@ sumScores scores =
 
 
 type Player = PlayerOne | PlayerTwo
-
-
-type alias SingleScore =
-  { player : Player
-  , score : Int
-  }
 
 
 type alias Score =

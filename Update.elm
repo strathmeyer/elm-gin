@@ -7,7 +7,6 @@ import Model
   , Player(..)
   , Round
   , Score
-  , SingleScore
   , playerScore
   , roundInit
   , sumScores
