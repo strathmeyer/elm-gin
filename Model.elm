@@ -3,9 +3,7 @@ module Model
     ( GameState(..)
     , Model
     , init
-    , playerScore
     , roundInit
-    , sumScores
     )
 
 
@@ -15,6 +13,7 @@ import Model.Score exposing ( Score )
 
 
 type GameState = InProgress | Completed
+
 
 -- TODO: use player names
 type alias Model =
@@ -28,29 +27,9 @@ type alias Model =
     }
 
 
-sumScores : List Score -> Score
-sumScores scores =
-  let
-    playerTotal player =
-      List.sum (List.map (playerScore player) scores)
-
-  in
-    Score
-      (playerTotal PlayerOne)
-      (playerTotal PlayerTwo)
-
-
 twoPlayerScoreInit =
   Score 0 0
 
-
-playerScore : Player -> Score -> Int
-playerScore player score =
-  case player of
-    PlayerOne ->
-      score.playerOne
-    PlayerTwo ->
-      score.playerTwo
 
 
 roundInit : Player -> Round

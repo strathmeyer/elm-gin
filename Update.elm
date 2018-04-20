@@ -4,14 +4,12 @@ import Model
   exposing
   ( GameState(..)
   , Model
-  , playerScore
   , roundInit
-  , sumScores
   )
 
-import Model.Player exposing ( Player(..) )
-import Model.Round exposing ( Round )
-import Model.Score exposing ( Score )
+import Model.Player as Player exposing ( Player(..) )
+import Model.Round as Round exposing ( Round )
+import Model.Score as Score exposing ( Score, playerScore )
 
 
 type Msg
@@ -175,7 +173,7 @@ checkForGameEnd model =
           boxScore model.rounds
 
         total =
-          sumScores
+          Score.sum
             [ boxTotal
             , model.roundTotal
             , winnerBonus model.roundTotal
@@ -233,7 +231,7 @@ update msg model =
                 (roundInit nextDealer) :: updatedRound :: tail
 
               roundTotal
-                = sumScores (List.map .score rounds)
+                = Score.sum (List.map .score rounds)
 
             in
               checkForGameEnd { model

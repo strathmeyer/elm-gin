@@ -9,13 +9,12 @@ import Model
   exposing
     ( GameState(..)
     , Model
-    , playerScore
     )
 
 
 import Model.Player exposing ( Player(..) )
 import Model.Round exposing ( Round )
-import Model.Score exposing ( Score )
+import Model.Score exposing ( Score, playerScore )
 
 
 scoreDisplay : String -> Score -> Html.Html Update.Msg
