@@ -22,42 +22,32 @@ addKnocker player round =
 addWinner : Round -> Player -> Round
 addWinner round knocker =
   let
-    nonKnocker = Player.other knocker
-
-    knockerScore =
+    knockerDeadwood =
       Score.get knocker round.deadwood
 
-    poneScore =
-      Score.get nonKnocker round.deadwood
+    poneDeadwood =
+      Score.get (Player.other knocker) round.deadwood
+
+    gin = knockerDeadwood == 0
 
     winner =
-      if knockerScore > 0 && knockerScore >= poneScore then
-        nonKnocker
-      else
+      if gin || knockerDeadwood < poneDeadwood then
         knocker
+      else
+        Player.other knocker
 
     winnerScore =
-      if winner == knocker then
-        if knockerScore == 0 then
-          -- gin
-          poneScore + 20
-        else
-          -- normal score
-          poneScore - knockerScore
+      if knocker /= winner then
+        (knockerDeadwood - poneDeadwood) + 10
       else
-        -- knocker was undercut
-        (knockerScore - poneScore) + 10
-
-    score =
-      case winner of
-        PlayerOne ->
-          Score winnerScore 0
-        PlayerTwo ->
-          Score 0 winnerScore
+        if gin then
+          poneDeadwood + 20
+        else
+          poneDeadwood - knockerDeadwood
   in
     { round |
         winner = Just winner,
-        score = score
+        score = Score.update winner winnerScore Score.init
     }
 
 
