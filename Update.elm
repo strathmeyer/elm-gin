@@ -140,9 +140,12 @@ winnerBonus roundTotal =
     else
       PlayerTwo
 
-    -- bonus is 200 for a skunk
+
     bonus =
-      100
+      if min playerOneScore playerTwoScore == 0 then
+        200
+      else
+        100
 
 
   in
