@@ -7,7 +7,7 @@ import Model
   )
 
 import Model.Player as Player exposing ( Player(..) )
-import Model.Round as Round exposing ( Round, addDeadwood, addKnocker, addWinner )
+import Model.Round as Round exposing ( Round )
 import Model.Score as Score exposing ( Score )
 
 
@@ -27,6 +27,48 @@ handleSubmit round =
       addWinner
         round
         knocker
+
+
+addDeadwood : Player -> Int -> Round -> Round
+addDeadwood player newScore round =
+  { round | deadwood = Score.update player newScore round.deadwood }
+
+
+addKnocker : Player -> Round -> Round
+addKnocker player round =
+  { round | knocker = Just player }
+
+
+addWinner : Round -> Player -> Round
+addWinner round knocker =
+  let
+    knockerDeadwood =
+      Score.get knocker round.deadwood
+
+    poneDeadwood =
+      Score.get (Player.other knocker) round.deadwood
+
+    gin = knockerDeadwood == 0
+
+    winner =
+      if gin || knockerDeadwood < poneDeadwood then
+        knocker
+      else
+        Player.other knocker
+
+    winnerScore =
+      if knocker /= winner then
+        (knockerDeadwood - poneDeadwood) + 10
+      else
+        if gin then
+          poneDeadwood + 20
+        else
+          poneDeadwood - knockerDeadwood
+  in
+    { round
+    | winner = Just winner
+    , score = Score.update winner winnerScore Score.init
+    }
 
 
 checkForGameEnd : Model -> Model
