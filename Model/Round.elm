@@ -14,6 +14,11 @@ type alias Round =
   }
 
 
+addDeadwood : Player -> Int -> Round -> Round
+addDeadwood player newScore round =
+  { round | deadwood = Score.update player newScore round.deadwood }
+
+
 addKnocker : Player -> Round -> Round
 addKnocker player round =
   { round | knocker = Just player }

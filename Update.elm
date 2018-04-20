@@ -7,7 +7,7 @@ import Model
   )
 
 import Model.Player as Player exposing ( Player(..) )
-import Model.Round as Round exposing ( Round, addKnocker, addWinner )
+import Model.Round as Round exposing ( Round, addDeadwood, addKnocker, addWinner )
 import Model.Score as Score exposing ( Score )
 
 
@@ -51,8 +51,8 @@ checkForGameEnd model =
       }
 
 
-update : Msg -> Model -> Model
-update msg model =
+updateLatestRound : Model -> (Round -> Round) -> Model
+updateLatestRound model updater =
   let
     round = List.head model.rounds
     tail = Maybe.withDefault [] (List.tail model.rounds)
@@ -62,25 +62,32 @@ update msg model =
         model
 
       Just r ->
-        case msg of
-          Knock player ->
-            { model | rounds = (addKnocker player r) :: tail }
+        { model | rounds = updater r :: tail }
 
-          Deadwood player string ->
-            case String.toInt string of
-              Err e ->
-                model
-              Ok score ->
-                let
-                  deadwood =
-                    Score.update player score r.deadwood
 
-                  updatedRound =
-                    { r | deadwood = deadwood }
-                in
-                  { model | rounds = updatedRound :: tail }
+update : Msg -> Model -> Model
+update msg model =
+  let
+    round = List.head model.rounds
+    tail = Maybe.withDefault [] (List.tail model.rounds)
+  in
+    case msg of
+      Knock player ->
+        updateLatestRound model (addKnocker player)
 
-          SubmitRound ->
+      Deadwood player string ->
+        case String.toInt string of
+          Err e ->
+            model
+          Ok score ->
+            updateLatestRound model (addDeadwood player score)
+
+      SubmitRound ->
+        case round of
+          Nothing ->
+            model
+
+          Just r ->
             let
               updatedRound =
                 handleSubmit r
