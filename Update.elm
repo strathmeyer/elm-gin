@@ -124,6 +124,9 @@ update msg model =
 
               nextDealer = Player.other r.dealer
 
+              -- move the Round.init to checkForGameEnd?
+              -- that way we won't have to have wonky view logic to
+              -- hide the latest round
               rounds =
                 (Round.init nextDealer) :: updatedRound :: tail
 
