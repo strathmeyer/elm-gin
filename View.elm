@@ -28,7 +28,7 @@ singleScoreDisplay : Player -> Score -> String
 singleScoreDisplay player score =
     playerString player
         ++ ": "
-        ++ toString (Score.get player score)
+        ++ String.fromInt (Score.get player score)
 
 
 scoreDisplay : String -> Score -> Html.Html Update.Msg
@@ -146,7 +146,7 @@ roundDisplay index round =
             [ row
                 [ p
                     [ class "col" ]
-                    [ text ("Round " ++ toString (index + 1)) ]
+                    [ text ("Round " ++ String.fromInt (index + 1)) ]
                 , p
                     [ class "col" ]
                     [ text ("Dealer: " ++ playerString round.dealer) ]

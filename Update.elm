@@ -135,10 +135,10 @@ update msg model =
 
         Deadwood player string ->
             case String.toInt string of
-                Err e ->
+                Nothing ->
                     model
 
-                Ok score ->
+                Just score ->
                     updateLatestRound (addDeadwood player score) model
 
         SubmitRound ->
