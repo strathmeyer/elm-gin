@@ -1,13 +1,16 @@
-module Model.Player exposing (..)
+module Model.Player exposing (Player(..), other)
 
 
-type Player = PlayerOne | PlayerTwo
+type Player
+    = PlayerOne
+    | PlayerTwo
 
 
 other : Player -> Player
 other player =
-  case player of
-    PlayerOne ->
-      PlayerTwo
-    PlayerTwo ->
-      PlayerOne
+    case player of
+        PlayerOne ->
+            PlayerTwo
+
+        PlayerTwo ->
+            PlayerOne
